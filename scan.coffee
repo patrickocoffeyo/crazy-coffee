@@ -10,11 +10,9 @@ scan = (f,b,s) ->
     when 1 then [[b], f(b,s[0])]
     else
       n = s.length
-      contract = (i) ->
-        if i is ~~(n/2) then s[i*2] else f(s[i*2], s[(i*2)+1])
-      [r, res] = scan(f,b,([0...~~((n+1)/2)].map contract))
-      expand = (i) ->
-        if (i % 2) is 0 then r[~~(i/2)] else f(r[~~(i/2)],s[i-1])
+      contract = (i) -> if i is ~~(n/2) then s[i*2] else f s[i*2], s[(i*2)+1]
+      expand = (i) -> if i%2 then f r[~~(i/2)], s[i-1] else r[~~(i/2)]
+      [r, res] = scan f, b, [0...~~((n+1)/2)].map contract
       [([0...n].map expand), res]
-addV = ([a,b],[c,d]) -> [a+c,b+d]
-console.log(scan(addV,[0,0],[1...100].map ((i) -> [i,i*2]))[1])
+addV = ([x,y],[z,t]) -> [x+z,y+t]
+console.log(scan addV, [0,0], [1...100].map ((i) -> [i,i*2]))
